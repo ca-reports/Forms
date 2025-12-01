@@ -1,78 +1,99 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Forms Hub</title>
+    <title>Daily Updates</title>
+
     <style>
         body {
             margin: 0;
+            padding: 0;
+            background-color: #eef1ff;
             font-family: Arial, sans-serif;
-            background-color: #e8f0fe;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             text-align: center;
         }
+
         .container {
             width: 100%;
+            max-width: 900px;
         }
+
         h1 {
-            color: #1a3c6e;
+            font-size: 40px;
+            color: #3c3f91;
             margin-bottom: 10px;
-            font-size: 32px;
         }
+
         p {
-            color: #1a3c6e;
+            color: #555;
             margin-bottom: 40px;
+            font-size: 18px;
         }
-        .buttons {
+
+        .button-box {
             display: flex;
             justify-content: center;
             gap: 40px;
+            flex-wrap: wrap;
         }
-        .btn {
-            padding: 20px 40px;
+
+        .card {
+            width: 300px;
+            height: 300px;
+            padding: 40px;
             border-radius: 25px;
-            font-size: 20px;
-            font-weight: bold;
-            text-decoration: none;
             color: white;
-            transition: 0.3s;
+            font-size: 22px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.25s;
+            text-decoration: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
-        .btn:hover {
-            opacity: 0.9;
-            transform: scale(1.05);
+
+        /* Lavender Gradient */
+        .timesheet {
+            background: linear-gradient(135deg, #c8a2ff, #a67eff);
         }
-        .green {
-            background-color: #16a34a;
+
+        /* Light Blue Gradient */
+        .loginlogout {
+            background: linear-gradient(135deg, #9ecbff, #6fa8ff);
         }
-        .orange {
-            background-color: #fb923c;
+
+        .card:hover {
+            transform: scale(1.08);
         }
     </style>
 </head>
-<body>
 
+<body>
     <div class="container">
         <h1>Hi, Welcome Back!</h1>
-        <p>What do you wanna update?</p>
+        <p>Select what you want to update today</p>
 
-        <div class="buttons">
+        <div class="button-box">
 
-            <!-- Left button: Timesheet Form -->
-            <a href="https://forms.microsoft.com/r/WsaZAZXx88" class="btn green">
+            <!-- Timesheet -->
+            <a href="https://forms.microsoft.com/r/WsaZAZXx88" class="card timesheet">
                 Timesheet Form
             </a>
 
-            <!-- Right button: Login Logout Tracker -->
-            <a href="https://forms.microsoft.com/Pages/ResponsePage.aspx?id=zdgqTVXXRkO0gmfdSzxwdMR2u7nMIXROja5-DuQFNxhUME1LMUtXQUJGUkJMOTRQRUZPWjVVMFFGRy4u" class="btn orange">
-                Login Logout Tracker
+            <!-- Login Logout -->
+            <a href="https://forms.microsoft.com/r/J4teFvsHUm" class="card loginlogout">
+                Login / Logout Tracker
             </a>
 
         </div>
     </div>
-
 </body>
+
 </html>
