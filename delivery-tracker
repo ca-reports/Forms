@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Delivery Tracking — Gopala Sharma</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+:root{
+  --bg: #EEF1EF;
+  --panel: #F8F9F7;
+  --ink: #1B2733;
+  --ink-soft: #55626C;
+  --hair: #CBD1CC;
+  --teal: #2F6B60;
+  --amber: #B4791F;
+  --rust: #A03B26;
+  --ghost: #C9CFCA;
+}
+
+*{ box-sizing: border-box; }
+
+body{
+  margin:0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'IBM Plex Sans', sans-serif;
+  padding: 40px 48px 64px;
+}
+
+.wrap{ max-width: 980px; margin: 0 auto; }
+
+.masthead{
+  display:flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  border-bottom: 2px solid var(--ink);
+  padding-bottom: 18px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+h1{
+  font-family: 'Fraunces', serif;
+  font-weight: 600;
+  font-size: 34px;
+  margin: 0 0 4px;
+  letter-spacing: -0.01em;
+}
+
+.masthead .who{
+  font-size: 15px;
+  color: var(--ink-soft);
+}
+
+.masthead .period{
+  text-align: right;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 13px;
+  color: var(--ink-soft);
+  line-height: 1.6;
+}
+
+.stat-strip{
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-top: 1px solid var(--hair);
+  border-bottom: 1px solid var(--hair);
+  margin-bottom: 40px;
+}
+
+.stat{
+  padding: 16px 18px;
+  border-right: 1px solid var(--hair);
+}
+.stat:last-child{ border-right: none; }
+
+.stat .n{
+  font-family: 'Fraunces', serif;
+  font-size: 30px;
+  font-weight: 600;
+  line-height: 1;
+}
+.stat .l{
+  margin-top: 6px;
+  font-size: 12.5px;
+  color: var(--ink-soft);
+}
+.stat.warn .n{ color: var(--rust); }
+.stat.ok .n{ color: var(--teal); }
+
+section h2{
+  font-family: 'Fraunces', serif;
+  font-size: 19px;
+  font-weight: 600;
+  margin: 0 0 4px;
+}
+section .sub{
+  font-size: 13px;
+  color: var(--ink-soft);
+  margin-bottom: 20px;
+}
+
+/* Gantt */
+.gantt{
+  margin-bottom: 44px;
+}
+
+.axis{
+  display: grid;
+  grid-template-columns: 130px 1fr;
+  margin-bottom: 6px;
+}
+.axis .spacer{}
+.axis .ticks{
+  position: relative;
+  height: 18px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--ink-soft);
+}
+.axis .tick{
+  position: absolute;
+  transform: translateX(-2px);
+}
+
+.row{
+  display: grid;
+  grid-template-columns: 130px 1fr;
+  align-items: center;
+  border-top: 1px solid var(--hair);
+  padding: 10px 0;
+}
+.row:last-child{ border-bottom: 1px solid var(--hair); }
+
+.row .key{
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 13px;
+  font-weight: 500;
+}
+.row .key .type{
+  display:block;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 10.5px;
+  color: var(--ink-soft);
+  margin-bottom: 2px;
+}
+
+.track{
+  position: relative;
+  height: 30px;
+  background:
+    repeating-linear-gradient(to right, transparent, transparent calc(100%/7 - 1px), var(--hair) calc(100%/7 - 1px), var(--hair) calc(100%/7));
+}
+
+.bar{
+  position: absolute;
+  height: 8px;
+  border-radius: 1px;
+}
+.bar.planned{
+  top: 4px;
+  background: transparent;
+  border: 1.5px solid var(--ghost);
+}
+.bar.actual{
+  top: 17px;
+  background: var(--teal);
+}
+.bar.actual.amber{ background: var(--amber); }
+.bar.actual.rust{ background: var(--rust); }
+
+.legend{
+  display:flex;
+  gap: 22px;
+  font-size: 12px;
+  color: var(--ink-soft);
+  margin-top: 14px;
+  align-items: center;
+}
+.legend span{ display:flex; align-items:center; gap:7px; }
+.swatch{ width:16px; height:8px; display:inline-block; border-radius:1px; }
+.swatch.p{ border: 1.5px solid var(--ghost); }
+.swatch.ok{ background: var(--teal); }
+.swatch.am{ background: var(--amber); }
+.swatch.ru{ background: var(--rust); }
+
+/* Blocked callout */
+.blocked{
+  border: 1.5px solid var(--rust);
+  background: #F7EDE9;
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 44px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.blocked .key{
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 600;
+  font-size: 14px;
+}
+.blocked .msg{
+  color: var(--ink-soft);
+  font-size: 13.5px;
+}
+.blocked .tag{
+  font-size: 11px;
+  letter-spacing: 0.03em;
+  color: #fff;
+  background: var(--rust);
+  padding: 4px 10px;
+}
+
+/* Table */
+table{
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+}
+th{
+  text-align: left;
+  font-weight: 600;
+  font-size: 11.5px;
+  color: var(--ink-soft);
+  border-bottom: 1.5px solid var(--ink);
+  padding: 8px 10px;
+}
+td{
+  padding: 10px;
+  border-bottom: 1px solid var(--hair);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 13px;
+}
+td.status{ font-family: 'IBM Plex Sans', sans-serif; }
+td.variance{ font-weight: 600; }
+td.variance.late{ color: var(--rust); }
+td.variance.late.minor{ color: var(--amber); }
+td.variance.early{ color: var(--teal); }
+
+footer{
+  margin-top: 40px;
+  padding-top: 14px;
+  border-top: 1px solid var(--hair);
+  font-size: 11.5px;
+  color: var(--ink-soft);
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="masthead">
+    <div>
+      <h1>Delivery Tracking</h1>
+      <div class="who">Gopala Sharma · Zilo developer team</div>
+    </div>
+    <div class="period">
+      27 JUL 2026 – 13 SEP 2026<br>
+      5 tickets tracked
+    </div>
+  </div>
+
+  <div class="stat-strip">
+    <div class="stat">
+      <div class="n">5</div>
+      <div class="l">Tickets tracked</div>
+    </div>
+    <div class="stat ok">
+      <div class="n">1</div>
+      <div class="l">Finished ahead of plan</div>
+    </div>
+    <div class="stat warn">
+      <div class="n">3</div>
+      <div class="l">Delivered late</div>
+    </div>
+    <div class="stat warn">
+      <div class="n">1</div>
+      <div class="l">Currently blocked</div>
+    </div>
+  </div>
+
+  <section class="gantt">
+    <h2>Planned vs. actual</h2>
+    <div class="sub">Outline bar = planned window · solid bar = actual window, colour-coded by slip</div>
+
+    <div class="axis">
+      <div class="spacer"></div>
+      <div class="ticks">
+        <span class="tick" style="left:0%">27 Jul</span>
+        <span class="tick" style="left:14.29%">3 Aug</span>
+        <span class="tick" style="left:28.57%">10 Aug</span>
+        <span class="tick" style="left:42.86%">17 Aug</span>
+        <span class="tick" style="left:57.14%">24 Aug</span>
+        <span class="tick" style="left:71.43%">31 Aug</span>
+        <span class="tick" style="left:85.71%">7 Sep</span>
+        <span class="tick" style="left:97%">13 Sep</span>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="key"><span class="type">Story</span>ZP-9828</div>
+      <div class="track">
+        <div class="bar planned" style="left:0%; width:6.12%;"></div>
+        <div class="bar actual amber" style="left:2.04%; width:12.24%;"></div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="key"><span class="type">Story</span>ZP-9822</div>
+      <div class="track">
+        <div class="bar planned" style="left:20.41%; width:10.20%;"></div>
+        <div class="bar actual" style="left:14.29%; width:10.20%;"></div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="key"><span class="type">Story</span>ZP-9823</div>
+      <div class="track">
+        <div class="bar planned" style="left:20.41%; width:10.20%;"></div>
+        <div class="bar actual rust" style="left:28.57%; width:69.39%;"></div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="key"><span class="type">Story</span>ZP-22655</div>
+      <div class="track">
+        <div class="bar planned" style="left:61.22%; width:2.04%;"></div>
+        <div class="bar actual amber" style="left:61.22%; width:10.20%;"></div>
+      </div>
+    </div>
+
+    <div class="legend">
+      <span><i class="swatch p"></i> Planned window</span>
+      <span><i class="swatch ok"></i> On time / early</span>
+      <span><i class="swatch am"></i> Minor slip (1–5 days)</span>
+      <span><i class="swatch ru"></i> Major slip (10+ days)</span>
+    </div>
+  </section>
+
+  <div class="blocked">
+    <div>
+      <div class="key">ZP-20339 · Task</div>
+      <div class="msg">No planned or actual dates logged — currently blocked, no progress to report.</div>
+    </div>
+    <div class="tag">BLOCKED</div>
+  </div>
+
+  <section>
+    <h2>Ticket detail</h2>
+    <div class="sub">Variance measured against planned end date</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Key</th>
+          <th>Planned</th>
+          <th>Actual</th>
+          <th>Status</th>
+          <th>Variance</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>ZP-9828</td>
+          <td>27 Jul – 30 Jul</td>
+          <td>28 Jul – 3 Aug</td>
+          <td class="status">Development in progress</td>
+          <td class="variance late minor">+4 days</td>
+        </tr>
+        <tr>
+          <td>ZP-9822</td>
+          <td>6 Aug – 11 Aug</td>
+          <td>3 Aug – 8 Aug</td>
+          <td class="status">Development in progress</td>
+          <td class="variance early">−3 days</td>
+        </tr>
+        <tr>
+          <td>ZP-9823</td>
+          <td>6 Aug – 11 Aug</td>
+          <td>10 Aug – 13 Sep</td>
+          <td class="status">Backlog</td>
+          <td class="variance late">+33 days</td>
+        </tr>
+        <tr>
+          <td>ZP-22655</td>
+          <td>26 Aug – 27 Aug</td>
+          <td>26 Aug – 31 Aug</td>
+          <td class="status">Development in progress</td>
+          <td class="variance late minor">+4 days</td>
+        </tr>
+        <tr>
+          <td>ZP-20339</td>
+          <td>—</td>
+          <td>—</td>
+          <td class="status">Blocked</td>
+          <td class="variance">—</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <footer>
+    Average slip across completed tickets with logged dates: +9.5 days. ZP-9823 accounts for the majority of that slip and sits in Backlog despite an actual end date already recorded — worth flagging for clarification.
+  </footer>
+
+</div>
+</body>
+</html>
